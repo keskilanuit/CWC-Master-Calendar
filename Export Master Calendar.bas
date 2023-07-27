@@ -14,9 +14,9 @@ Sub Export_Master_Calendar()
     lastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
     
 
-    Dim priorMonthYear As String, priorMonthMonth As String
-    priorMonthYear = Year(Date)
-    priorMonthMonth = Format(Date, "MM")
+    Dim CurrentMonthYear As String, CurrentMonthMonth As String
+    CurrentMonthYear = Year(Date)
+    CurrentMonthMonth = Format(Date, "MM")
     
 
     With Application.FileDialog(msoFileDialogFolderPicker)
@@ -28,7 +28,7 @@ Sub Export_Master_Calendar()
         End If
     End With
 
-    exportName = "Master Calendar - " & priorMonthYear & "-" & priorMonthMonth & ".xlsx"
+    exportName = "Master Calendar - " & CurrentMonthYear & "-" & CurrentMonthMonth & ".xlsx"
     exportPath = exportFolder & "\" & exportName
     
 
