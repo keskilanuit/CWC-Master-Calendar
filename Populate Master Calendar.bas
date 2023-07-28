@@ -41,6 +41,37 @@ Sub Populate_Master_Calendar()
                     End If
         End If
     Next i
+
+
+
+
+
+' Continue to loop through "PeriodEnd Tasks" worksheet
+Set matrixSheet = ThisWorkbook.Worksheets("PeriodEnd Tasks") ' Updated worksheet name
+lastRow = matrixSheet.Cells(matrixSheet.Rows.Count, "M").End(xlUp).Row
+
+' Add 3 blank rows before starting to copy from "PeriodEnd Tasks" worksheet
+masterLastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
+masterSheet.Rows(masterLastRow + 1).Resize(3).Insert Shift:=xlDown
+
+For i = 3 To lastRow Step 4
+    If matrixSheet.Range("M" & i).Value = "X" Then
+        masterLastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
+        matrixSheet.Range("A" & i & ":L" & i).Copy
+        masterSheet.Range("A" & masterLastRow + 1).PasteSpecial xlPasteValues
+
+        If masterSheet.Range("N" & masterLastRow + 1).Value = "" Then
+            masterSheet.Range("M" & masterLastRow + 1).Value = "Not Start"
+            numRowsCopied = numRowsCopied + 1
+        End If
+    End If
+Next i
+
+
+
+
+
+
         
 
       MinutesElapsed = Format((Timer - StartTime) / 86400, "hh:mm:ss")
