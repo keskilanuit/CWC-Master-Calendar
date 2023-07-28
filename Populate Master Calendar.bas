@@ -54,7 +54,7 @@ lastRow = matrixSheet.Cells(matrixSheet.Rows.Count, "M").End(xlUp).Row
 masterLastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
 masterSheet.Rows(masterLastRow + 1).Resize(3).Insert Shift:=xlDown
 
-For i = 3 To lastRow Step 4
+For i = 3 To lastRow
     If matrixSheet.Range("M" & i).Value = "X" Then
         masterLastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
         matrixSheet.Range("A" & i & ":L" & i).Copy
