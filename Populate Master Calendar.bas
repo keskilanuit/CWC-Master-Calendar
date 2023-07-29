@@ -21,8 +21,18 @@ Sub Populate_Master_Calendar()
     Dim matrixSheet As Worksheet, masterSheet As Worksheet
     Dim lastRow As Long, i As Long, masterLastRow As Long
     
+  
+    Dim Cell As Range
+    
+    Dim formattingRange As Range
+ 
+   
+    
+    
     Set matrixSheet = ThisWorkbook.Worksheets("Matrix")
     Set masterSheet = ThisWorkbook.Worksheets("Master Calendar")
+    
+    
     
      Worksheets("Master Calendar").Range("A3:Z" & Rows.Count).ClearContents
     
@@ -41,12 +51,34 @@ Sub Populate_Master_Calendar()
                     End If
         End If
     Next i
+        
+        
+        
+        
+            ' Add a blank row after pasting the last row from the initial VBA code
+    masterLastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
+    masterSheet.Rows(masterLastRow + 1).Insert Shift:=xlDown
 
+ 
+    With masterSheet.Range("A" & masterLastRow + 1)
+        .HorizontalAlignment = xlLeft
+        .Value = "PeriodEnd task items shown below"
+        .Font.Size = 24
+        .Font.Name = "Calibri"
+        .Font.Bold = True
+        .Font.Color = RGB(255, 0, 0) ' RED font color
+        End With
+        
+            With masterSheet.Range("A" & masterLastRow + 1 & ":L" & masterLastRow + 1)
+        .Interior.Color = RGB(255, 255, 0) ' Yellow background color
+    End With
+        
+        
 
+    
+        
+        
 
-
-
-' Continue to loop through "PeriodEnd Tasks" worksheet
     Set matrixSheet = ThisWorkbook.Worksheets("PeriodEnd Tasks")
 
     ' Find the last row in column M of the matrixSheet
@@ -79,10 +111,9 @@ Sub Populate_Master_Calendar()
     
     ' Clear clipboard
     Application.CutCopyMode = False
+    
 
 
-
-        
 
       MinutesElapsed = Format((Timer - StartTime) / 86400, "hh:mm:ss")
  MsgBox "Finished populating Current month's Master Calendar, total of " & numRowsCopied & " returns need to be prepare for this period."
