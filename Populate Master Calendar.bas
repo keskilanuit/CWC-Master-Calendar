@@ -47,28 +47,38 @@ Sub Populate_Master_Calendar()
 
 
 ' Continue to loop through "PeriodEnd Tasks" worksheet
-Set matrixSheet = ThisWorkbook.Worksheets("PeriodEnd Tasks") ' Updated worksheet name
-lastRow = matrixSheet.Cells(matrixSheet.Rows.Count, "M").End(xlUp).Row
+    Set matrixSheet = ThisWorkbook.Worksheets("PeriodEnd Tasks")
 
-' Add 3 blank rows before starting to copy from "PeriodEnd Tasks" worksheet
-masterLastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
-masterSheet.Rows(masterLastRow + 1).Resize(3).Insert Shift:=xlDown
+    ' Find the last row in column M of the matrixSheet
+    lastRow = matrixSheet.Cells(matrixSheet.Rows.Count, "M").End(xlUp).Row
 
-For i = 3 To lastRow
-    If matrixSheet.Range("M" & i).Value = "X" Then
-        masterLastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
-        matrixSheet.Range("A" & i & ":L" & i).Copy
-        masterSheet.Range("A" & masterLastRow + 1).PasteSpecial xlPasteValues
+    ' Set the masterSheet variable (change "Sheet2" to your master sheet name)
+    Set masterSheet = ThisWorkbook.Worksheets("Master Calendar")
 
-        If masterSheet.Range("N" & masterLastRow + 1).Value = "" Then
-            masterSheet.Range("M" & masterLastRow + 1).Value = "Not Start"
-            numRowsCopied = numRowsCopied + 1
+    ' Loop through the matrixSheet from row 3 to lastRow
+    For i = 3 To lastRow
+        If matrixSheet.Range("M" & i).Value = "X" Then
+            ' Find the last row in column A of the masterSheet
+            masterLastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
+
+            ' Copy values and paste to the masterSheet with formatting
+            matrixSheet.Range("A" & i & ":L" & i).Copy
+            masterSheet.Range("A" & masterLastRow + 1).PasteSpecial xlPasteValues
+            masterSheet.Range("A" & masterLastRow + 1).PasteSpecial xlPasteFormats
+
+            ' Convert formulas to hardcoded values in the target range
+            masterSheet.Range("A" & masterLastRow + 1).Value = masterSheet.Range("A" & masterLastRow + 1).Value
+            
+            ' Check and update column N in the masterSheet
+            If masterSheet.Range("N" & masterLastRow + 1).Value = "" Then
+                masterSheet.Range("M" & masterLastRow + 1).Value = "Not Start"
+                numRowsCopied = numRowsCopied + 1
+            End If
         End If
-    End If
-Next i
-
-
-
+    Next i
+    
+    ' Clear clipboard
+    Application.CutCopyMode = False
 
 
 
