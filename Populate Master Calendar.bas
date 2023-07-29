@@ -3,7 +3,7 @@ Sub Populate_Master_Calendar()
 
 'Author: Keski Lin'
 
-    answer = MsgBox("Executing this macro may take up to 120 minutes, failed on running macro may result in crash all opened excel files, please make sure all your workbooks are saved. Do you wish to continue?", vbQuestion + vbYesNo, "Warning")
+    answer = MsgBox("Executing this macro may take up to 30 minutes, failed on running macro may result in crash all opened excel files, please make sure all your workbooks are saved. Do you wish to continue?", vbQuestion + vbYesNo, "Warning")
     
       If answer = vbYes Then
 
@@ -25,30 +25,7 @@ Sub Populate_Master_Calendar()
     Dim Cell As Range
     Dim formattingRange As Range
  
-    Dim exampleRow As Range
-    Dim taargetRange As Range
-    
-    Dim lastUsedRow As Long
-    Dim lastRowToDelete As Long
-    
 
-    Set ws = ThisWorkbook.Worksheets("Master Calendar")
-    
-    ' Find the last row with data in column A
-    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
-    
-    ' Define the example row range (rows 3 and 4) with formatting you want to apply
-    Set exampleRow = ws.Range("A3:M4")
-    
-    ' Define the target range (rows 5 to lastRow) for formatting
-    Set targetRange = ws.Range("A5:M" & lastRow)
-    
-    ' Apply the formatting from the example row to the target range
-    exampleRow.Copy
-    targetRange.PasteSpecial Paste:=xlPasteFormats
-    Application.CutCopyMode = False
-    
-    
       
       
     Set matrixSheet = ThisWorkbook.Worksheets("Matrix")
