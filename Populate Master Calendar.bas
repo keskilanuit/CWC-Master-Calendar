@@ -23,12 +23,34 @@ Sub Populate_Master_Calendar()
     
   
     Dim Cell As Range
-    
     Dim formattingRange As Range
  
-   
+    Dim exampleRow As Range
+    Dim taargetRange As Range
+    
+    Dim lastUsedRow As Long
+    Dim lastRowToDelete As Long
+    
+
+    Set ws = ThisWorkbook.Worksheets("Master Calendar")
+    
+    ' Find the last row with data in column A
+    lastRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+    
+    ' Define the example row range (rows 3 and 4) with formatting you want to apply
+    Set exampleRow = ws.Range("A3:M4")
+    
+    ' Define the target range (rows 5 to lastRow) for formatting
+    Set targetRange = ws.Range("A5:M" & lastRow)
+    
+    ' Apply the formatting from the example row to the target range
+    exampleRow.Copy
+    targetRange.PasteSpecial Paste:=xlPasteFormats
+    Application.CutCopyMode = False
     
     
+      
+      
     Set matrixSheet = ThisWorkbook.Worksheets("Matrix")
     Set masterSheet = ThisWorkbook.Worksheets("Master Calendar")
     
@@ -37,12 +59,15 @@ Sub Populate_Master_Calendar()
      Worksheets("Master Calendar").Range("A3:Z" & Rows.Count).ClearContents
     
     lastRow = matrixSheet.Cells(matrixSheet.Rows.Count, "M").End(xlUp).Row
+      
+    
     
     For i = 3 To lastRow
         If matrixSheet.Range("M" & i).Value = "X" Then
             masterLastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
             matrixSheet.Range("A" & i & ":L" & i).Copy
             masterSheet.Range("A" & masterLastRow + 1).PasteSpecial xlPasteValues
+             masterSheet.Range("A" & masterLastRow + 1).PasteSpecial xlPasteFormats
             
 
             If masterSheet.Range("N" & masterLastRow + 1).Value = "" Then
@@ -113,6 +138,19 @@ Sub Populate_Master_Calendar()
     Application.CutCopyMode = False
     
 
+
+    Set ws = ThisWorkbook.Worksheets("Master Calendar")
+
+    ' Find the last used row in column A starting from cell A3
+    lastUsedRow = ws.Cells(ws.Rows.Count, "A").End(xlUp).Row
+
+    ' Calculate the row number to delete (last used row + 1 to 50 rows after that)
+    lastRowToDelete = lastUsedRow + 1 + 50
+
+    ' Loop through and delete the next 50 unused rows from the last used row
+    For i = lastRowToDelete To lastUsedRow + 1 Step -1
+        ws.Rows(i).Delete
+    Next i
 
 
       MinutesElapsed = Format((Timer - StartTime) / 86400, "hh:mm:ss")
