@@ -1,0 +1,49 @@
+Sub Export_Master_Calendar()
+
+    'Author: Keski Lin'
+    ' in this version, I have make the macro to export the file as file name of "Master Calendar - YYYY-MM" '
+    Dim masterSheet As Worksheet
+    Dim holidaysSheet As Worksheet ' Added reference to the Holidays sheet
+    Dim lastRow As Long, i As Long, masterLastRow As Long
+    Dim exportName As String, exportFolder As String
+    Dim exportPath As String, exportFile As String
+    Dim overwriteAnswer As VbMsgBoxResult
+
+    Set masterSheet = ThisWorkbook.Worksheets("Master Calendar")
+    Set holidaysSheet = ThisWorkbook.Worksheets("Calendar&Holidays") ' Added reference to the Holidays sheet
+    lastRow = masterSheet.Cells(masterSheet.Rows.Count, "A").End(xlUp).Row
+
+    Dim CurrentMonthYear As String, CurrentMonthMonth As String
+    CurrentMonthYear = Year(Date)
+    CurrentMonthMonth = Format(Date, "MM")
+
+    With Application.FileDialog(msoFileDialogFolderPicker)
+        .Title = "Select export folder"
+        If .Show = -1 Then
+            exportFolder = .SelectedItems(1)
+        Else
+            Exit Sub
+        End If
+    End With
+
+    ' Get the export name from Q2 cell in "Calendar&Holidays" sheet
+    exportName = "Master Calendar - " & Format(holidaysSheet.Range("Q2").Value, "yyyy-mm")
+
+    If exportName = "" Then Exit Sub '
+
+    exportPath = exportFolder & "\" & exportName & ".xlsx"
+
+    If Dir(exportPath) <> "" Then
+        overwriteAnswer = MsgBox("The file " & exportName & ".xlsx" & " already exists in the selected folder. Do you want to overwrite it?", vbQuestion + vbYesNo, "File already exists")
+        If overwriteAnswer = vbNo Then Exit Sub
+    End If
+
+    Application.DisplayAlerts = False
+    masterSheet.Copy
+    ActiveWorkbook.SaveAs fileName:=exportPath, FileFormat:=xlOpenXMLWorkbook, CreateBackup:=False
+    ActiveWorkbook.Close
+    Application.DisplayAlerts = True
+
+    MsgBox "Master Calendar has been exported successfully to your selected folder."
+
+End Sub
